@@ -1,0 +1,163 @@
+@extends('layout.adminLayout')
+@section('title')
+    {{__('cp.blogs')}}
+@endsection
+
+
+@section('content')
+    <div class="row">
+        <div class="col-md-12">
+            <!-- BEGIN SAMPLE FORM PORTLET-->
+            <div class="portlet light bordered">
+
+                <div class="portlet-body form">
+
+                    <form method="post" action="{{ route('admin.blogs.update',$item->id) }}" enctype="multipart/form-data" class="form-horizontal" role="form" id="form">
+                        {{ csrf_field() }}
+                        {{ method_field('PATCH')}}
+
+
+
+                            @foreach($locales as $locale)
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="title_{{$locale->lang}}"> {{__('cp.title_'.$locale->lang)}} </label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="title_{{$locale->lang}}" id="title_{{$locale->lang}}" value="{{ old('title_'.$locale->lang, $item->translate($locale->lang)->title) }}" required>
+                                    </div>
+                                </div>
+                            @endforeach
+
+                        
+                            @foreach($locales as $locale)
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="description_{{$locale->lang}}"> {{__('cp.description_'.$locale->lang)}} </label>
+                                    <div class="col-md-6">
+                                        <textarea rows="6" class="form-control" name="description_{{$locale->lang}}"  id="description_{{$locale->lang}}" required aria-required="true">{{ old('description_'.$locale->lang, $item->translate($locale->lang)->description) }}</textarea>
+{{--                                        <textarea rows="6" class="form-control" name="description_{{$locale->lang}}" required aria-required="true"> {{ old('description_'.$locale->lang, $item->translate($locale->lang)->description) }}</textarea>--}}
+                                    </div>
+                                </div>
+                            @endforeach
+                            
+
+                            @foreach($locales as $locale)
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="subdescription_{{$locale->lang}}"> {{__('cp.subdescription_'.$locale->lang)}} </label>
+                                    <div class="col-md-6">
+                                        <textarea rows="6" class="form-control" name="subdescription_{{$locale->lang}}" required aria-required="true"> {{ old('subdescription_'.$locale->lang, $item->translate($locale->lang)->subdescription) }}</textarea>
+
+                                        {{--                                        <textarea rows="6" class="form-control" name="subdescription_{{$locale->lang}}"  id="subdescription_{{$locale->lang}}" required aria-required="true">{{ old('subdescription_'.$locale->lang, $item->translate($locale->lang)->subdescription) }}</textarea>--}}
+                                    </div>
+                                </div>
+                            @endforeach
+
+                
+
+                            @foreach($locales as $locale)
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label" for="author_{{$locale->lang}}"> {{__('cp.author_'.$locale->lang)}} </label>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="author_{{$locale->lang}}" id="author_{{$locale->lang}}" value="{{ old('author_'.$locale->lang, $item->translate($locale->lang)->author) }}">
+                                    </div>
+                                </div>
+                            @endforeach
+
+                        
+{{--                            @foreach($locales as $locale)--}}
+{{--                                <div class="form-group">--}}
+{{--                                    <label class="col-sm-2 control-label" for="keywords_{{$locale->lang}}"> {{__('cp.keywords_'.$locale->lang)}} </label>--}}
+{{--                                    <div class="col-md-6">--}}
+{{--                                        <textarea rows="6" class="form-control" name="keywords_{{$locale->lang}}" required aria-required="true"> {{ old('keywords_'.$locale->lang, $item->translate($locale->lang)->keywords) }}</textarea>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+
+         
+{{--                            <div class="form-group" id="type">--}}
+{{--                                <label class="col-sm-2 control-label" >{{__('cp.share_post')}} </label>--}}
+{{--                                <div class="col-md-6 input-field">--}}
+{{--                                    <select class="form-control select02" name="share_post">--}}
+{{--                                        <option {{ $item->share_post == 'yes' ? 'selected' : '' }} value="yes"> {{ __('cp.yes') }} </option>--}}
+{{--                                        <option {{ $item->share_post == 'no' ? 'selected' : '' }} value="no"> {{ __('cp.no') }} </option>--}}
+{{--                                    </select>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+                                
+         
+{{--                            <div class="form-group" id="type">--}}
+{{--                                <label class="col-sm-2 control-label" >{{__('cp.accept_comments')}} </label>--}}
+{{--                                <div class="col-md-6 input-field">--}}
+{{--                                    <select class="form-control select02" name="accept_comments">--}}
+{{--                                        <option {{ $item->accept_comments == 'yes' ? 'selected' : '' }} value="yes"> {{ __('cp.yes') }} </option>--}}
+{{--                                        <option {{ $item->accept_comments == 'no' ? 'selected' : '' }} value="no"> {{ __('cp.no') }} </option>--}}
+{{--                                    </select>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+                            
+
+                            <legend>{{__('cp.image')}}</legend>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <div class="fileinput-new thumbnail" onclick="document.getElementById('edit_image').click()" style="cursor:pointer; max-width:100%;">
+                                        <img src="{{url($item->image)}}" id="editImage" style="max-width:500px;">
+                                    </div>
+                                    <input type="file" class="form-control" name="image" id="edit_image" style="display:none">
+                                </div>
+                            </div>
+                            
+                            
+                            <br>
+                    
+                            <legend>{{__('cp.images')}}</legend>
+                            <div class="form-group">
+                                <div class="col-md-6 col-md-offset-3">
+                                    <div class="imageupload" style="display:flex;flex-wrap:wrap">
+                                        @foreach($item->photos as $one)
+                                            <div class="imageBox text-center" style="width:150px; height:190px; margin:5px;">
+                                                <img src="{{$one->image}}" style="width:150px;height:150px; padding:5px;">
+                                                <button class="btn btn-danger deleteImage" type="button">{{__("cp.remove")}}</button>
+                                                <input class="attachedValues form-control" type="hidden" name="oldImages[]" value="{{$one->id}}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <div class="file-field input-field input-group control-group increment" >
+                                        <div class="btn amber" onclick="document.getElementById('all_images').click()"> 
+                                        <span> {{__("cp.addImages")}} </span>
+                                          <button class="btn btn-success" type="button"><i class="glyphicon glyphicon-plus"></i> {{__("cp.addImages")}}</button>
+                                          <input type="file" class="form-control hidden"  style="display:none;"  accept="image/*" id="all_images"  multiple />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                            <br>
+                            <div class="form-actions">
+                                <div class="row">
+                                    <div class="col-md-offset-3 col-md-9">
+                                        <button type="submit" class="btn btn-primary"> {{ __('cp.submit') }} </button>
+                                        <a href="{{ route('admin.blogs.index') }}" class="btn btn-warning"> {{ __('cp.cancel') }} </a>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+@endsection
+@section('script')
+
+    <script>
+    </script>
+
+@endsection
